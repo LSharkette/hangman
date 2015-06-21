@@ -12,41 +12,33 @@ var hangmanWords = [
   "come","made","may","part"
 ];
 
-var cleanWords;
-
-function limitArray(){
-  var cleanWords = [];
-
-  for(var i=0, j=hangmanWords.length,w; i<j; i++) {
-    w=hangmanWords[i];
-    if(w.length>=3){
-      cleanWords.push(w);
-    }
-  }
-
-  hangmanWords= cleanWords;
-  return hangmanWords;
-  console.log(cleanWords);
-}
-limitArray();
-
-
-function randomWord(c){
+//Chooses random integer from hangmanWords array index
+function randomWord(){
   var index = Math.floor(Math.random() * hangmanWords.length);
 // return randomWord[index];
 console.log(index);
-return c[index];
 }
-var answer= randomWord(limitArray());
 
 
-function dashify(randomWord){
-dashes=[];
-for(var i=0; i < randomWord.length; i++){
-dashes.push("_");
-document.querySelector('span').textContent = dashes.join("");
+
+function hangman(word) {
+    var alpha = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $.each(alpha.split(''), function(i, val) {
+        $('#alpha').append($('<span class="guess">' + val + '</span>'));
+    });
+    $.each(word.split(''), function(i, val) {
+        $('#word').append($('<span class="letter" letter="' + val + '">_</span>'));
+    });
+    $('.guess').click(function() {
+        var count = $('#word [letter=' + $(this).text() + ']').each(function() {
+            $(this).text($(this).attr('letter'));
+        }).length;
+        $(this).removeClass('guess').css('color', (count > 0 ? 'green' : 'red')).unbind('click');
+    });
 }
-console.log(dashes);
-}
-dashify(answer);
-console.log(answer);
+
+$(document).ready(function() {
+    $('#BUT').click(function() {
+        hangman('EXTRA');
+    });
+});
